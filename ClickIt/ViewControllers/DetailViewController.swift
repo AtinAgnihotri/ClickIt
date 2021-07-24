@@ -7,37 +7,45 @@
 
 import UIKit
 
-class DetailViewController: UITabBarController {
+class DetailViewController: UIViewController {
     
     var clickedItem: ClickedItem!
     var clickedImage: UIImageView!
+    var notesLabel: UILabel!
     
     override func loadView() {
         createSuperView()
         addImageView()
+        addNotesLabel()
+        addConstraints()
     }
     
     func createSuperView() {
         view = UIView()
-        view.backgroundColor = .tertiarySystemFill
+        view.backgroundColor = .white
     }
     
     func addImageView() {
         clickedImage = UIImageView()
-        NSLayoutConstraint.activate([
+        clickedImage.translatesAutoresizingMaskIntoConstraints = false
+        clickedImage.contentMode = .scaleAspectFit
+        clickedImage.setContentHuggingPriority(UILayoutPriority(1), for: .vertical)
+        view.addSubview(clickedImage)
+    }
+    
+    func getClickedImageConstraints() -> [NSLayoutConstraint] {
+        [
+            clickedImage.topAnchor.constraint(equalTo: view.topAnchor),
             clickedImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            clickedImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            clickedImage.widthAnchor.constraint(equalTo: view.widthAnchor),
-            clickedImage.heightAnchor.constraint(equalTo: view.heightAnchor)
-        ])
+            clickedImage.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ]
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setTitleCaption()
-        setNotes()
+        setNotesLabel()
         loadImage()
-        // Do any additional setup after loading the view.
     }
     
     func loadImage() {
@@ -47,7 +55,7 @@ class DetailViewController: UITabBarController {
                 .getDocumentsDirectory()
                 .appendingPathComponent(imageToLoad)
 
-            
+            clickedImage.image = UIImage(contentsOfFile: imagePath.path)
         }
     }
     
@@ -55,20 +63,43 @@ class DetailViewController: UITabBarController {
         title = clickedItem?.caption
     }
     
-    func setNotes() {
-        tabBarItem = UITabBarItem(title: clickedItem?.notes, image: nil, tag: 0)
+    func setNotesLabel() {
+        notesLabel.text = clickedItem.notes
+    }
+    
+    func addNotesLabel() {
+        notesLabel = UILabel()
+        notesLabel.translatesAutoresizingMaskIntoConstraints = false
+        notesLabel.contentMode = .scaleAspectFit
+        notesLabel.numberOfLines = 0
+        notesLabel.textAlignment = .center
+        notesLabel.setContentHuggingPriority(UILayoutPriority(2), for: .vertical)
+        view.addSubview(notesLabel)
+    }
+    
+    func getNotesLabelConstraints() -> [NSLayoutConstraint] {
+        [
+            notesLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            notesLabel.topAnchor.constraint(equalTo: clickedImage.bottomAnchor),
+            notesLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            notesLabel.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
+        ]
+    }
+    
+    func addConstraints() {
+        var constraints = getClickedImageConstraints()
+        constraints += getNotesLabelConstraints()
+        NSLayoutConstraint.activate(constraints)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnTap = true
-        tabBarController?.hidesBottomBarWhenPushed = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnTap = false
-        tabBarController?.hidesBottomBarWhenPushed = false
     }
     
 

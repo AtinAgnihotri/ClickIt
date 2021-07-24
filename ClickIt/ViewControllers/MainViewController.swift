@@ -42,6 +42,11 @@ class MainViewController: UITableViewController {
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = DetailViewController()
+        vc.clickedItem = ClickedItem(imageName: "camera", caption: "Test Caption", notes: "These are some test notes")
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
 }
 
