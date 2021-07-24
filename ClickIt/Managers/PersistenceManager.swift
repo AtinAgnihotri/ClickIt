@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class PersistenceManager {
     
@@ -18,6 +19,12 @@ class PersistenceManager {
     func getDocumentsDirectory() -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return path[0]
+    }
+    
+    func saveImage(_ image: UIImage?, to path: URL) {
+        if let jpegData = image?.jpegData(compressionQuality: 0.8) {
+            try? jpegData.write(to: path)
+        }
     }
     
 }

@@ -14,6 +14,10 @@ class ClickItItem: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        clickedImage.translatesAutoresizingMaskIntoConstraints = false
+        caption.translatesAutoresizingMaskIntoConstraints = false
+//        clickedImage.contentMode = .scaleAspectFit
+//        clickedImage.autoresizesSubviews = true
         // Initialization code
     }
 
@@ -21,5 +25,14 @@ class ClickItItem: UITableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
+    
+//    func setupCell(caption: String, image: String) {
+//        captionLabel.text = caption
+//        let imagePath = PersistenceManager
+//            .shared
+//            .getDocumentsDirectory()
+//            .appendingPathComponent(image)
+//        clickedImage.image = UIImage(contentsOfFile: imagePath.path)
+//    }
 
 }
